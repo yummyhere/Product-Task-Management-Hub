@@ -1,0 +1,30 @@
+{
+  "name": "product-task-hub-server",
+  "version": "1.0.0",
+  "description": "Backend REST API for Product & Task Management Hub",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node ./node_modules/nodemon/bin/nodemon.js src/server.js",
+    "seed": "node src/utils/seed.js",
+    "test:api": "node src/utils/testApi.js"
+  },
+  "keywords": [
+    "express",
+    "mongodb",
+    "mongoose",
+    "rest-api",
+    "crud"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
