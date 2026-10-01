@@ -1,7 +1,15 @@
 import axios from 'axios';
 
-// Base API configuration with environment variable support
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Base API configuration with environment variable support & automatic normalization
+const getApiBaseUrl = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (!envUrl) return 'http://localhost:5000/api';
+  
+  const cleanUrl = envUrl.trim().replace(/\/+$/, '');
+  return cleanUrl.endsWith('/api') ? cleanUrl : `${cleanUrl}/api`;
+};
+
+const API_URL = getApiBaseUrl();
 
 const apiClient = axios.create({
   baseURL: API_URL,

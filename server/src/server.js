@@ -55,8 +55,8 @@ app.use(async (req, res, next) => {
   }
 });
 
-// API Health Check
-app.get('/api/health', (req, res) => {
+// API Health Check (supports both /api/health and /health)
+app.get(['/api/health', '/health'], (req, res) => {
   res.status(200).json({
     success: true,
     message: 'Product & Task Management Hub API is healthy',
@@ -72,8 +72,9 @@ app.get('/', (req, res) => {
   });
 });
 
-// API Routes
+// API Routes (supports both /api/items and /items)
 app.use('/api/items', itemRoutes);
+app.use('/items', itemRoutes);
 
 // 404 Handler for undefined API routes
 app.use(notFound);
