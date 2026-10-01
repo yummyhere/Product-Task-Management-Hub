@@ -70,6 +70,10 @@ const itemSchema = new mongoose.Schema(
         },
         message: 'Price cannot be negative'
       }
+    },
+    image: {
+      type: String,
+      default: null
     }
   },
   {

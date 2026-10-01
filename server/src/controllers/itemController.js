@@ -76,7 +76,7 @@ class ItemController {
    */
   createItem = async (req, res, next) => {
     try {
-      const { name, description, type, status, priority, price } = req.body;
+      const { name, description, type, status, priority, price, image } = req.body;
 
       // Validate required fields explicitly
       const missingFields = [];
@@ -110,7 +110,8 @@ class ItemController {
         type,
         status,
         priority,
-        price
+        price,
+        image: image || null
       });
 
       return res.status(201).json({

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { CheckCircle2, AlertCircle, X } from 'lucide-react';
+import { Check, AlertCircle, X } from 'lucide-react';
 
 const Toast = ({ message, type = 'success', onClose, duration = 4000 }) => {
   useEffect(() => {
@@ -17,9 +17,9 @@ const Toast = ({ message, type = 'success', onClose, duration = 4000 }) => {
     <div className="toast-container" id="toast-notification-container">
       <div className={`toast ${type}`} role="status" aria-live="polite">
         {type === 'success' ? (
-          <CheckCircle2 size={18} style={{ flexShrink: 0 }} />
+          <Check size={16} style={{ flexShrink: 0 }} />
         ) : (
-          <AlertCircle size={18} style={{ flexShrink: 0 }} />
+          <AlertCircle size={16} style={{ flexShrink: 0 }} />
         )}
         <span>{message}</span>
         <button
@@ -28,7 +28,7 @@ const Toast = ({ message, type = 'success', onClose, duration = 4000 }) => {
           onClick={onClose}
           aria-label="Dismiss notification"
         >
-          <X size={16} />
+          <X size={14} />
         </button>
       </div>
     </div>

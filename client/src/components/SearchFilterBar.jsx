@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, RotateCcw, Filter, Plus } from 'lucide-react';
+import { Search, X, Plus } from 'lucide-react';
 import { PRODUCT_STATUSES, TASK_STATUSES, PRIORITIES } from '../utils/formatters';
 
 const SearchFilterBar = ({
@@ -14,14 +14,12 @@ const SearchFilterBar = ({
   onResetFilters,
   onOpenCreateModal
 }) => {
-  // Determine relevant status options based on type filter
   let availableStatuses = [];
   if (typeFilter === 'Product') {
     availableStatuses = PRODUCT_STATUSES;
   } else if (typeFilter === 'Task') {
     availableStatuses = TASK_STATUSES;
   } else {
-    // Combine unique statuses
     availableStatuses = Array.from(new Set([...PRODUCT_STATUSES, ...TASK_STATUSES]));
   }
 
@@ -31,12 +29,12 @@ const SearchFilterBar = ({
     <div className="controls-container">
       <div className="controls-header">
         <div className="search-box">
-          <Search size={18} className="search-icon" />
+          <Search size={16} className="search-icon" />
           <input
             id="search-input"
             type="text"
             className="search-input"
-            placeholder="Search products and tasks by name or description..."
+            placeholder="Search items by name or description..."
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
           />
@@ -48,7 +46,7 @@ const SearchFilterBar = ({
           onClick={onOpenCreateModal}
           id="action-create-btn"
         >
-          <Plus size={18} />
+          <Plus size={16} />
           <span>Create Item</span>
         </button>
       </div>
@@ -56,7 +54,7 @@ const SearchFilterBar = ({
       <div className="filters-row">
         <div className="filter-group">
           <label htmlFor="filter-type" className="filter-label">
-            Type:
+            Type
           </label>
           <select
             id="filter-type"
@@ -64,7 +62,6 @@ const SearchFilterBar = ({
             value={typeFilter}
             onChange={(e) => {
               onTypeChange(e.target.value);
-              // Reset status if not valid for new type
               onStatusChange('All');
             }}
           >
@@ -76,7 +73,7 @@ const SearchFilterBar = ({
 
         <div className="filter-group">
           <label htmlFor="filter-status" className="filter-label">
-            Status:
+            Status
           </label>
           <select
             id="filter-status"
@@ -95,7 +92,7 @@ const SearchFilterBar = ({
 
         <div className="filter-group">
           <label htmlFor="filter-priority" className="filter-label">
-            Priority:
+            Priority
           </label>
           <select
             id="filter-priority"
@@ -117,11 +114,10 @@ const SearchFilterBar = ({
             type="button"
             className="btn-reset"
             onClick={onResetFilters}
-            title="Clear all search and filter conditions"
             id="btn-reset-filters"
           >
-            <RotateCcw size={14} />
-            <span>Reset Filters</span>
+            <X size={13} />
+            <span>Clear filters</span>
           </button>
         )}
       </div>

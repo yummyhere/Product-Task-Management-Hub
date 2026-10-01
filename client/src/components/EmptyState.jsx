@@ -1,24 +1,24 @@
 import React from 'react';
-import { PackageOpen, Plus, RotateCcw } from 'lucide-react';
+import { Inbox, Plus } from 'lucide-react';
 
 const EmptyState = ({ isFiltered = false, onOpenCreate, onResetFilters }) => {
   return (
     <div className="empty-state" id="empty-state-view">
       <div className="empty-icon">
-        <PackageOpen size={32} />
+        <Inbox size={24} />
       </div>
 
       <h3 className="empty-title">
-        {isFiltered ? 'No matching items found' : 'No items found'}
+        {isFiltered ? 'No matching items' : 'No items yet'}
       </h3>
 
       <p className="empty-description">
         {isFiltered
-          ? 'No products or tasks match your current search criteria or active filters. Try adjusting your filters or resetting them.'
-          : 'Create your first product or task to get started with your management hub.'}
+          ? 'No items match your active search or filter criteria. Try clearing filters or searching for something else.'
+          : 'Get started by creating your first product or task.'}
       </p>
 
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '0.65rem' }}>
         {isFiltered && onResetFilters && (
           <button
             type="button"
@@ -26,8 +26,7 @@ const EmptyState = ({ isFiltered = false, onOpenCreate, onResetFilters }) => {
             onClick={onResetFilters}
             id="empty-reset-btn"
           >
-            <RotateCcw size={16} />
-            <span>Reset Filters</span>
+            Clear filters
           </button>
         )}
 
@@ -37,8 +36,8 @@ const EmptyState = ({ isFiltered = false, onOpenCreate, onResetFilters }) => {
           onClick={onOpenCreate}
           id="empty-create-btn"
         >
-          <Plus size={16} />
-          <span>Create Item</span>
+          <Plus size={15} />
+          <span>New Item</span>
         </button>
       </div>
     </div>

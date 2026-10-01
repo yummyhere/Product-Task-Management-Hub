@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layers, Plus, Database } from 'lucide-react';
+import { Layers, Plus } from 'lucide-react';
 
 const Navbar = ({ onOpenCreateModal, isConnected = true }) => {
   return (
@@ -7,19 +7,17 @@ const Navbar = ({ onOpenCreateModal, isConnected = true }) => {
       <div className="navbar-inner">
         <div className="navbar-brand">
           <div className="brand-icon-wrapper">
-            <Layers size={22} color="#ffffff" />
+            <Layers size={18} color="#ffffff" />
           </div>
           <div>
             <h1 className="brand-title">Product &amp; Task Hub</h1>
-            <p className="brand-subtitle">Level 4 • Full-Stack Architecture</p>
           </div>
         </div>
 
         <div className="navbar-actions">
-          <div className="api-badge" title="Backend & Database status">
-            <span className="api-pulse" />
-            <Database size={13} />
-            <span>{isConnected ? 'MongoDB Connected' : 'Connecting...'}</span>
+          <div className="status-indicator" title="Database connection status">
+            <span className={`status-dot ${!isConnected ? 'offline' : ''}`} />
+            <span>{isConnected ? 'Connected' : 'Offline'}</span>
           </div>
 
           <button 
@@ -28,7 +26,7 @@ const Navbar = ({ onOpenCreateModal, isConnected = true }) => {
             onClick={onOpenCreateModal}
             id="nav-create-btn"
           >
-            <Plus size={18} />
+            <Plus size={16} />
             <span>New Item</span>
           </button>
         </div>

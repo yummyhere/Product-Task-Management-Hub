@@ -1,5 +1,5 @@
 import React from 'react';
-import { Edit2, Trash2, Calendar, DollarSign, Tag, CheckCircle2 } from 'lucide-react';
+import { Edit2, Trash2, ImageOff } from 'lucide-react';
 import { formatDate, formatPrice, getStatusBadgeStyle, getPriorityBadgeStyle } from '../utils/formatters';
 
 const ItemCard = ({ item, onEdit, onDelete, isDeleting }) => {
@@ -8,15 +8,27 @@ const ItemCard = ({ item, onEdit, onDelete, isDeleting }) => {
 
   return (
     <article className="item-card" id={`item-card-${item._id}`}>
-      <div>
+      {/* Product Image */}
+      {isProduct && (
+        <div className="card-image-wrapper">
+          {item.image ? (
+            <img src={item.image} alt={item.name} className="card-image" />
+          ) : (
+            <div className="card-image-placeholder">
+              <ImageOff size={20} />
+            </div>
+          )}
+        </div>
+      )}
+
+      <div className="card-body">
         <div className="card-top">
           <span className={`type-pill ${isProduct ? 'product' : 'task'}`}>
-            <Tag size={12} />
             {item.type}
           </span>
 
           <span className={`priority-badge ${getPriorityBadgeStyle(item.priority)}`}>
-            {item.priority} Priority
+            {item.priority}
           </span>
         </div>
 
@@ -27,12 +39,11 @@ const ItemCard = ({ item, onEdit, onDelete, isDeleting }) => {
 
         <div className="card-meta-row">
           <span className={`badge ${getStatusBadgeStyle(item.status)}`}>
-            <CheckCircle2 size={12} />
             {item.status}
           </span>
 
           {isProduct && formattedPrice && (
-            <span className="price-tag" title="Product Price">
+            <span className="price-tag" title="Price">
               {formattedPrice}
             </span>
           )}
@@ -40,12 +51,9 @@ const ItemCard = ({ item, onEdit, onDelete, isDeleting }) => {
       </div>
 
       <div className="card-footer">
-        <div className="card-date" title={`Created: ${formatDate(item.createdAt)}`}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-            <Calendar size={13} />
-            {formatDate(item.createdAt)}
-          </span>
-        </div>
+        <span className="card-date">
+          {formatDate(item.createdAt)}
+        </span>
 
         <div className="card-actions">
           <button
@@ -55,7 +63,7 @@ const ItemCard = ({ item, onEdit, onDelete, isDeleting }) => {
             title="Edit item"
             id={`btn-edit-${item._id}`}
           >
-            <Edit2 size={15} />
+            <Edit2 size={14} />
           </button>
 
           <button
@@ -66,7 +74,7 @@ const ItemCard = ({ item, onEdit, onDelete, isDeleting }) => {
             title="Delete item"
             id={`btn-delete-${item._id}`}
           >
-            <Trash2 size={15} />
+            <Trash2 size={14} />
           </button>
         </div>
       </div>

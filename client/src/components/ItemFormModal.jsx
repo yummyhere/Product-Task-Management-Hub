@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { X, AlertCircle, Save, PlusCircle } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { X, AlertCircle, ImagePlus, Trash2 } from 'lucide-react';
 import {
   VALID_TYPES,
   PRODUCT_STATUSES,
@@ -20,8 +20,10 @@ const ItemFormModal = ({ isOpen, onClose, onSubmit, initialItem = null, isSubmit
   });
 
   const [errors, setErrors] = useState({});
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageData, setImageData] = useState(null);
+  const fileInputRef = useRef(null);
 
-  // Reset or populate form when modal opens or initialItem changes
   useEffect(() => {
     if (initialItem) {
       setFormData({
@@ -32,6 +34,8 @@ const ItemFormModal = ({ isOpen, onClose, onSubmit, initialItem = null, isSubmit
         priority: initialItem.priority || 'Medium',
         price: initialItem.price !== null && initialItem.price !== undefined ? initialItem.price : ''
       });
+      setImagePreview(initialItem.image || null);
+      setImageData(initialItem.image || null);
     } else {
       setFormData({
         name: '',
@@ -41,13 +45,14 @@ const ItemFormModal = ({ isOpen, onClose, onSubmit, initialItem = null, isSubmit
         priority: 'Medium',
         price: ''
       });
+      setImagePreview(null);
+      setImageData(null);
     }
     setErrors({});
   }, [initialItem, isOpen]);
 
   if (!isOpen) return null;
 
-  // Handle Type Change and dynamically switch to an appropriate status
   const handleTypeChange = (newType) => {
     let newStatus = formData.status;
     if (newType === 'Product') {
@@ -58,6 +63,9 @@ const ItemFormModal = ({ isOpen, onClose, onSubmit, initialItem = null, isSubmit
       if (!TASK_STATUSES.includes(newStatus)) {
         newStatus = 'Pending';
       }
+      // Clear image when switching to Task
+      setImagePreview(null);
+      setImageData(null);
     }
 
     setFormData((prev) => ({
@@ -71,17 +79,44 @@ const ItemFormModal = ({ isOpen, onClose, onSubmit, initialItem = null, isSubmit
     }
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setErrors((prev) => ({ ...prev, image: 'Please select a valid image file' }));
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setErrors((prev) => ({ ...prev, image: 'Image must be smaller than 5MB' }));
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+      setImageData(reader.result);
+      setErrors((prev) => ({ ...prev, image: null }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = () => {
+    setImagePreview(null);
+    setImageData(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Clear error for field on change
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: null }));
     }
   };
 
-  // Client-side validation
   const validate = () => {
     const newErrors = {};
 
@@ -139,7 +174,8 @@ const ItemFormModal = ({ isOpen, onClose, onSubmit, initialItem = null, isSubmit
       type: formData.type,
       status: formData.status,
       priority: formData.priority,
-      price: formData.price !== '' ? Number(formData.price) : null
+      price: formData.price !== '' ? Number(formData.price) : null,
+      image: formData.type === 'Product' ? (imageData || null) : null
     };
 
     onSubmit(payload);
@@ -158,8 +194,7 @@ const ItemFormModal = ({ isOpen, onClose, onSubmit, initialItem = null, isSubmit
       >
         <div className="modal-header">
           <h2 className="modal-title" id="modal-title">
-            {isEditMode ? <Save size={20} /> : <PlusCircle size={20} />}
-            {isEditMode ? 'Edit Item' : 'Create New Item'}
+            {isEditMode ? 'Edit Item' : 'New Item'}
           </h2>
           <button 
             type="button" 
@@ -168,7 +203,7 @@ const ItemFormModal = ({ isOpen, onClose, onSubmit, initialItem = null, isSubmit
             aria-label="Close dialog"
             id="btn-close-modal"
           >
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
 
@@ -184,14 +219,14 @@ const ItemFormModal = ({ isOpen, onClose, onSubmit, initialItem = null, isSubmit
                 name="name"
                 type="text"
                 className={`form-input ${errors.name ? 'has-error' : ''}`}
-                placeholder="e.g. Ergonomic Keyboard or Setup CI Pipeline"
+                placeholder="Item name"
                 value={formData.name}
                 onChange={handleChange}
                 autoFocus
               />
               {errors.name && (
                 <div className="form-error" id="error-name">
-                  <AlertCircle size={14} />
+                  <AlertCircle size={13} />
                   <span>{errors.name}</span>
                 </div>
               )}
@@ -207,13 +242,13 @@ const ItemFormModal = ({ isOpen, onClose, onSubmit, initialItem = null, isSubmit
                 name="description"
                 rows="3"
                 className={`form-textarea ${errors.description ? 'has-error' : ''}`}
-                placeholder="Provide detailed information about the product or task..."
+                placeholder="Detailed description..."
                 value={formData.description}
                 onChange={handleChange}
               />
               {errors.description && (
                 <div className="form-error" id="error-description">
-                  <AlertCircle size={14} />
+                  <AlertCircle size={13} />
                   <span>{errors.description}</span>
                 </div>
               )}
@@ -240,7 +275,7 @@ const ItemFormModal = ({ isOpen, onClose, onSubmit, initialItem = null, isSubmit
                 </select>
                 {errors.type && (
                   <div className="form-error" id="error-type">
-                    <AlertCircle size={14} />
+                    <AlertCircle size={13} />
                     <span>{errors.type}</span>
                   </div>
                 )}
@@ -265,12 +300,61 @@ const ItemFormModal = ({ isOpen, onClose, onSubmit, initialItem = null, isSubmit
                 </select>
                 {errors.priority && (
                   <div className="form-error" id="error-priority">
-                    <AlertCircle size={14} />
+                    <AlertCircle size={13} />
                     <span>{errors.priority}</span>
                   </div>
                 )}
               </div>
             </div>
+
+            {/* Image Upload - Products only */}
+            {formData.type === 'Product' && (
+              <div className="form-group">
+                <label className="form-label">Product Image <span className="optional">(Optional)</span></label>
+                {imagePreview ? (
+                  <div className="image-preview-wrapper">
+                    <img src={imagePreview} alt="Product preview" className="image-preview" />
+                    <button
+                      type="button"
+                      className="image-remove-btn"
+                      onClick={handleRemoveImage}
+                      title="Remove image"
+                    >
+                      <Trash2 size={13} /> Remove
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    className="image-upload-area"
+                    onClick={() => fileInputRef.current?.click()}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      const file = e.dataTransfer.files[0];
+                      if (file) handleImageChange({ target: { files: [file] } });
+                    }}
+                  >
+                    <ImagePlus size={24} className="upload-icon" />
+                    <span className="upload-text">Click or drag & drop an image</span>
+                    <span className="upload-subtext">PNG, JPG, WEBP up to 5MB</span>
+                  </div>
+                )}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  style={{ display: 'none' }}
+                  id="field-image"
+                />
+                {errors.image && (
+                  <div className="form-error" id="error-image">
+                    <AlertCircle size={13} />
+                    <span>{errors.image}</span>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Status & Price Row */}
             <div className="form-row-2">
@@ -293,7 +377,7 @@ const ItemFormModal = ({ isOpen, onClose, onSubmit, initialItem = null, isSubmit
                 </select>
                 {errors.status && (
                   <div className="form-error" id="error-status">
-                    <AlertCircle size={14} />
+                    <AlertCircle size={13} />
                     <span>{errors.status}</span>
                   </div>
                 )}
@@ -301,7 +385,7 @@ const ItemFormModal = ({ isOpen, onClose, onSubmit, initialItem = null, isSubmit
 
               <div className="form-group">
                 <label htmlFor="field-price" className="form-label">
-                  Price ($) <span className="optional">{formData.type === 'Task' ? '(Optional for tasks)' : '(Optional)'}</span>
+                  Price ($) <span className="optional">{formData.type === 'Task' ? '(Optional)' : ''}</span>
                 </label>
                 <input
                   id="field-price"
@@ -310,13 +394,13 @@ const ItemFormModal = ({ isOpen, onClose, onSubmit, initialItem = null, isSubmit
                   step="0.01"
                   min="0"
                   className={`form-input ${errors.price ? 'has-error' : ''}`}
-                  placeholder={formData.type === 'Product' ? 'e.g. 49.99' : 'N/A or hourly rate'}
+                  placeholder={formData.type === 'Product' ? '0.00' : 'Optional'}
                   value={formData.price}
                   onChange={handleChange}
                 />
                 {errors.price && (
                   <div className="form-error" id="error-price">
-                    <AlertCircle size={14} />
+                    <AlertCircle size={13} />
                     <span>{errors.price}</span>
                   </div>
                 )}
@@ -340,14 +424,7 @@ const ItemFormModal = ({ isOpen, onClose, onSubmit, initialItem = null, isSubmit
               disabled={isSubmitting}
               id="btn-submit-item-form"
             >
-              {isSubmitting ? (
-                <>
-                  <span className="spinner" style={{ width: '16px', height: '16px', borderWidth: '2px' }} />
-                  <span>Saving...</span>
-                </>
-              ) : (
-                <span>{isEditMode ? 'Update Item' : 'Save Item'}</span>
-              )}
+              {isSubmitting ? 'Saving...' : (isEditMode ? 'Save changes' : 'Create item')}
             </button>
           </div>
         </form>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle, Trash2, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 const DeleteConfirmModal = ({ isOpen, onClose, onConfirm, item, isDeleting = false }) => {
   if (!isOpen || !item) return null;
@@ -15,9 +15,8 @@ const DeleteConfirmModal = ({ isOpen, onClose, onConfirm, item, isDeleting = fal
         aria-describedby="delete-dialog-desc"
       >
         <div className="modal-header">
-          <h2 className="modal-title" id="delete-dialog-title" style={{ color: '#fb7185' }}>
-            <AlertTriangle size={20} />
-            Confirm Deletion
+          <h2 className="modal-title" id="delete-dialog-title">
+            Delete item
           </h2>
           <button 
             type="button" 
@@ -26,30 +25,16 @@ const DeleteConfirmModal = ({ isOpen, onClose, onConfirm, item, isDeleting = fal
             aria-label="Close dialog"
             id="btn-close-delete-modal"
           >
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
 
         <div className="modal-body" id="delete-dialog-desc">
-          <p style={{ fontSize: '1rem', color: '#f3f4f6', marginBottom: '0.75rem' }}>
-            Are you sure you want to delete this item?
+          <p style={{ fontSize: '0.9375rem', color: 'var(--text-main)', marginBottom: '0.75rem' }}>
+            Are you sure you want to delete <strong>{item.name}</strong>?
           </p>
-          
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.04)',
-            border: '1px solid var(--border-subtle)',
-            borderRadius: 'var(--radius-md)',
-            padding: '0.85rem 1rem',
-            marginBottom: '0.75rem'
-          }}>
-            <p style={{ fontWeight: 600, color: '#f9fafb' }}>{item.name}</p>
-            <p style={{ fontSize: '0.8125rem', color: '#9ca3af', marginTop: '0.2rem' }}>
-              Type: {item.type} • Status: {item.status}
-            </p>
-          </div>
-
-          <p style={{ fontSize: '0.875rem', color: '#fda4af' }}>
-            This action cannot be undone.
+          <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
+            This action cannot be undone and will permanently remove this {item.type.toLowerCase()} from the database.
           </p>
         </div>
 
@@ -70,17 +55,7 @@ const DeleteConfirmModal = ({ isOpen, onClose, onConfirm, item, isDeleting = fal
             disabled={isDeleting}
             id="btn-confirm-delete"
           >
-            {isDeleting ? (
-              <>
-                <span className="spinner" style={{ width: '16px', height: '16px', borderWidth: '2px' }} />
-                <span>Deleting...</span>
-              </>
-            ) : (
-              <>
-                <Trash2 size={16} />
-                <span>Delete</span>
-              </>
-            )}
+            {isDeleting ? 'Deleting...' : 'Delete'}
           </button>
         </div>
       </div>

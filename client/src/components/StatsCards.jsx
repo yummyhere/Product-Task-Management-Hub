@@ -1,5 +1,5 @@
 import React from 'react';
-import { Package, CheckSquare, Clock, Box } from 'lucide-react';
+import { Package, CheckSquare, Clock, LayoutGrid } from 'lucide-react';
 
 const StatsCards = ({ items = [] }) => {
   const totalCount = items.length;
@@ -13,40 +13,40 @@ const StatsCards = ({ items = [] }) => {
     <div className="stats-grid">
       <div className="stat-card">
         <div className="stat-icon total">
-          <Box size={24} />
+          <LayoutGrid size={20} />
         </div>
         <div className="stat-info">
           <span className="stat-label">Total Items</span>
           <span className="stat-value">{totalCount}</span>
-          <span className="stat-subtext">All database records</span>
+          <span className="stat-subtext">All records</span>
         </div>
       </div>
 
       <div className="stat-card">
         <div className="stat-icon products">
-          <Package size={24} />
+          <Package size={20} />
         </div>
         <div className="stat-info">
           <span className="stat-label">Products</span>
           <span className="stat-value">{productsCount}</span>
-          <span className="stat-subtext">Catalog inventory</span>
+          <span className="stat-subtext">In catalog</span>
         </div>
       </div>
 
       <div className="stat-card">
         <div className="stat-icon tasks">
-          <CheckSquare size={24} />
+          <CheckSquare size={20} />
         </div>
         <div className="stat-info">
           <span className="stat-label">Tasks</span>
           <span className="stat-value">{tasksCount}</span>
-          <span className="stat-subtext">Project workflow items</span>
+          <span className="stat-subtext">Work items</span>
         </div>
       </div>
 
       <div className="stat-card">
         <div className="stat-icon active">
-          <Clock size={24} />
+          <Clock size={20} />
         </div>
         <div className="stat-info">
           <span className="stat-label">Active Tasks</span>
