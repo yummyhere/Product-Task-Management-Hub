@@ -12,7 +12,15 @@ const ItemCard = ({ item, onEdit, onDelete, isDeleting }) => {
       {isProduct && (
         <div className="card-image-wrapper">
           {item.image ? (
-            <img src={item.image} alt={item.name} className="card-image" />
+            <img 
+              src={item.image} 
+              alt={item.name} 
+              className="card-image"
+              loading="lazy"
+              decoding="async"
+              width="400"
+              height="200"
+            />
           ) : (
             <div className="card-image-placeholder">
               <ImageOff size={20} />

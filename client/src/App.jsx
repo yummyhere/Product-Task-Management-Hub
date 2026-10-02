@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import Navbar from './components/Navbar';
 import Dashboard from './pages/Dashboard';
-import ItemFormModal from './components/ItemFormModal';
-import DeleteConfirmModal from './components/DeleteConfirmModal';
 import Toast from './components/Toast';
 import useItems from './hooks/useItems';
+
+const ItemFormModal = lazy(() => import('./components/ItemFormModal'));
+const DeleteConfirmModal = lazy(() => import('./components/DeleteConfirmModal'));
 
 function App() {
   const {
@@ -134,7 +135,7 @@ function App() {
 
   return (
     <div className="app-container">
-      <Navbar onOpenCreateModal={handleOpenCreate} isConnected={backendConnected} />
+      <Navbar isConnected={backendConnected} />
 
       <main className="main-content">
         <Dashboard
@@ -160,22 +161,30 @@ function App() {
       </main>
 
       {/* Item Creation / Edit Modal */}
-      <ItemFormModal
-        isOpen={isFormOpen}
-        onClose={handleCloseForm}
-        onSubmit={handleFormSubmit}
-        initialItem={editingItem}
-        isSubmitting={isSubmitting}
-      />
+      {isFormOpen && (
+        <Suspense fallback={null}>
+          <ItemFormModal
+            isOpen={isFormOpen}
+            onClose={handleCloseForm}
+            onSubmit={handleFormSubmit}
+            initialItem={editingItem}
+            isSubmitting={isSubmitting}
+          />
+        </Suspense>
+      )}
 
       {/* Delete Confirmation Modal */}
-      <DeleteConfirmModal
-        isOpen={isDeleteOpen}
-        onClose={handleCloseDelete}
-        onConfirm={handleConfirmDelete}
-        item={itemToDelete}
-        isDeleting={isDeleting}
-      />
+      {isDeleteOpen && (
+        <Suspense fallback={null}>
+          <DeleteConfirmModal
+            isOpen={isDeleteOpen}
+            onClose={handleCloseDelete}
+            onConfirm={handleConfirmDelete}
+            item={itemToDelete}
+            isDeleting={isDeleting}
+          />
+        </Suspense>
+      )}
 
       {/* Toast Notification Container */}
       <Toast

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import itemApi from '../services/itemApi';
 
 /**
@@ -16,6 +16,8 @@ export const useItems = () => {
   const [typeFilter, setTypeFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState('All');
   const [priorityFilter, setPriorityFilter] = useState('All');
+
+  const isInitialMount = useRef(true);
 
   // Fetch items from the backend API
   const fetchItems = useCallback(async () => {
@@ -57,6 +59,12 @@ export const useItems = () => {
   }, [typeFilter, statusFilter, priorityFilter, search]);
 
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      fetchItems();
+      return;
+    }
+
     const timer = setTimeout(() => {
       fetchItems();
     }, 200);

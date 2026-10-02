@@ -1,7 +1,7 @@
 import React from 'react';
-import { Layers, Plus } from 'lucide-react';
+import { Layers } from 'lucide-react';
 
-const Navbar = ({ onOpenCreateModal, isConnected = true }) => {
+const Navbar = ({ isConnected = true }) => {
   return (
     <header className="navbar">
       <div className="navbar-inner">
@@ -19,16 +19,6 @@ const Navbar = ({ onOpenCreateModal, isConnected = true }) => {
             <span className={`status-dot ${!isConnected ? 'offline' : ''}`} />
             <span>{isConnected ? 'Connected' : 'Offline'}</span>
           </div>
-
-          <button 
-            type="button" 
-            className="btn-primary" 
-            onClick={onOpenCreateModal}
-            id="nav-create-btn"
-          >
-            <Plus size={16} />
-            <span>New Item</span>
-          </button>
         </div>
       </div>
     </header>
